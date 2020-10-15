@@ -1,0 +1,172 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <style>
+            html, body, #cesiumContainer {
+                width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+            }
+    </style>
+    <link href="np3d/np3d.css" rel="stylesheet" />
+    <script src="np3d/np3d.js"></script>
+    <script src="quadtree.js"></script>
+</head>
+<body>
+    <div id = "3dContainer"></div>
+    <script>
+        var engine = np3d.Create3dEngine(np3d.EngineType.Cesium, "3dContainer");
+        engine.statusCallback = ((bCreated) => {
+            if (bCreated) {
+                //engine.scene.CreateTerrainLayer("http://27.17.7.86:60001/terrain/", {enableNormals: true, enableOcean: true});
+
+                engine.scene.CreateImageryLayer(np3d.ProviderType.Arcgis);
+                var modelLayer = engine.scene.CreateModelLayer("http://27.17.7.86:60001/3dtiles/shanghai/tileset.json");
+                //engine.navigator.FlytoTargets(engine.utiles.CreateVector3FromDegree(114.088642951, 22.6295192194, -1.52, 0, -90));
+                //engine.environment.globeTransparent = 0.5;
+                engine.navigator.FlytoSceneObject(modelLayer, 4);
+                //modelLayer.visible = false;
+
+                engine.debug.enable3dTilesInspector = true;
+
+                // engine.scene.CreatePoint(engine.utiles.CreateVector3FromDegree(120, 30, 10));
+                // engine.scene.CreatePoint(engine.utiles.CreateVector3FromDegree(120, 30.001, 10));
+                // engine.scene.CreatePoint(engine.utiles.CreateVector3FromDegree(120, 30.002, 10));
+                // engine.scene.CreatePoint(engine.utiles.CreateVector3FromDegree(120.001, 30, 10));
+                // engine.scene.CreatePoint(engine.utiles.CreateVector3FromDegree(120.001, 30.001, 10));
+                // engine.scene.CreatePoint(engine.utiles.CreateVector3FromDegree(120.001, 30.002, 10));
+                // engine.scene.CreatePoint(engine.utiles.CreateVector3FromDegree(120.002, 30, 10));
+                // engine.scene.CreatePoint(engine.utiles.CreateVector3FromDegree(120.002, 30.001, 10));
+                // engine.scene.CreatePoint(engine.utiles.CreateVector3FromDegree(120.002, 30.002, 10));
+
+                // x1 = 116.69466743717953;
+                // x2 = 116.69838599583976;
+                // y1 = 29.71242816092312;
+                // y2 = 29.713577139454053;
+
+                //engine.navigator.FlytoTargets(engine.utiles.CreateVector3FromDegree(116.69466743717953, 29.71242816092312));
+
+
+                // const points = [
+                // engine.utiles.CreateVector3FromDegree(x1, y1, 0),
+                // engine.utiles.CreateVector3FromDegree(x2, y1, 0),
+                // engine.utiles.CreateVector3FromDegree(x2, y2, 0),
+                // engine.utiles.CreateVector3FromDegree(x1, y2, 0),
+                // ]
+
+                // const polygon = engine.scene.CreatePolygon(points, {clampToGround: true});
+                // engine.navigator.FlytoSceneObject(polygon, 4);
+
+                // engine.plot.PlotPolygon({clampToGround: true});
+                // engine.plot.completeEvent.On(async (plot, plotObj) => {
+                //     console.log(plotObj.vertexs);
+
+                //     const points = plotObj.vertexs;
+                //     const pts = await engine.analysis.AcquirePointsOnGround([points[0], points[1], points[2], points[3]]);
+                //     console.log(pts[0].ToLonLatAlt()[2], pts[1].ToLonLatAlt()[2], pts[2].ToLonLatAlt()[2], pts[3].ToLonLatAlt()[2]);
+
+                //     const fill = await engine.analysis.AcquireAmountOfFill(points, pts[0].ToLonLatAlt()[2]);
+                //     console.log(fill);
+
+                //     const dig = await engine.analysis.AcquireAmountOfDig(points, pts[0].ToLonLatAlt()[2]);
+                //     console.log(dig);
+
+                //     const fillArea = await engine.analysis.AcquireAreaOfFill(points, pts[0].ToLonLatAlt()[2]);
+                //     console.log(fillArea);
+
+                //     const digArea = await engine.analysis.AcquireAreaOfDig(points, pts[0].ToLonLatAlt()[2]);
+                //     console.log(digArea);
+
+                    
+                //     const area = await engine.analysis.AcquirePolygonAreaOnGround(points);
+                //     console.log(area);
+
+                //     engine.plot.PlotPolygon({clampToGround: true});
+                // });
+
+
+
+
+                // const pt2 = await engine.analysis.AcquirePointsOnGround([points[1]]);
+                // console.log(pt2.ToLonLatAlt()[2]);
+
+                // const pt3 = await engine.analysis.AcquirePointsOnGround([points[2]]);
+                // console.log(pt3.ToLonLatAlt()[2]);
+
+                // const pt4 = await engine.analysis.AcquirePointsOnGround(points[3]);
+                // console.log(pt4.ToLonLatAlt()[2]);
+
+
+
+                // const highest = await engine.analysis.AcquireHighestPoint(points);
+                // //console.log(highest);
+                // console.log(highest.ToLonLatAlt()[2]);
+
+                // const lowest = await engine.analysis.AcquireLowestPoint(points);
+                // console.log(lowest.ToLonLatAlt()[2]);
+
+
+
+                // $.get("./assets/演示/长输管线/20191101合并.json").done((data) => {
+                //     let objs = engine.scene.CreateSceneObjects(JSON.stringify(data));
+                //     engine.navigator.FlytoSceneObject(objs[0], 4);
+                // });
+
+                // engine.canvas.enableNavigationWidget = false;
+
+                // let tree = new QuadTree();
+
+
+                // for (let i = 90; i < 100; i += 0.1)
+                //     for (let j = 60; j < 70; j += 0.1) {
+                //         tree.AddObject(i.toString() + "-" + j.toString(), i, j);
+
+                //         engine.scene.CreatePoint(engine.utiles.CreateVector3ClampOnGround(i, j), {name: i.toString() + "+" + j.toString()});
+                //     }
+
+                // tree.Build();
+
+                // engine.navigator.cameraChangedCallback = (navigator => {
+                //     let pos = navigator.position.ToLonLatAlt();
+
+                //     if (pos[2] < 10000) {
+                //         let res =tree.Search(pos[0], pos[1]);
+
+                //         res.forEach(element => {
+                //             let obj = engine.scene.GetSceneObjectsByName(element.id);
+                //             if (obj === undefined || obj.length === 0) {
+                //                 let model = engine.scene.CreateModel("assets/models/GroundVehicle.glb", engine.utiles.CreateVector3ClampOnGround(element.lon, element.lat), {name: element.id, scale: 100});
+                //                 model.group = "well";
+                //                 console.log(element.id);
+                //             }       
+                //         });
+                //     } else {
+                //         let group = engine.scene.GetEntityGroup("well");
+                //         if (group !== undefined) {
+                //             engine.scene.DestroySceneObject(group.id);
+                //         }
+                //     }
+                // })
+
+                // engine.scene.StartSelect(np3d.SelectMode.Point);
+
+                // const ids = [];
+                // engine.scene.selectCompleteEvent.On((sender, selectset) => {
+                //     engine.scene.StartSelect(np3d.SelectMode.Point);
+
+
+                //     console.log(selectset);      
+                // });
+            }
+            else {
+                console.log("引擎未被正确创建");
+            }
+        });
+
+
+
+
+    </script>
+</body>
+</html>

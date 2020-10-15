@@ -1,0 +1,35 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <title>对象_图片标签</title>
+    <style>
+            html, body, #cesiumContainer {
+                width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+            }
+    </style>
+    
+    <link href="np3d/np3d.css" rel="stylesheet" />
+    <script src="np3d/np3d.js"></script>
+</head>
+<body>
+    <div id = "3dContainer" ></div>
+    <script>
+        var engine = np3d.Create3dEngine(np3d.EngineType.Cesium, "3dContainer");
+        engine.statusCallback = (bCreated => {
+            if (bCreated) {
+                engine.scene.CreateImageryLayer(np3d.ProviderType.Arcgis);
+                engine.scene.CreateScreenImage("./assets/images/医疗.png", {horizontalAlignment: np3d.HorizontalAlignment.Center, verticalAlignment: np3d.VerticalAlignment.Center});
+                engine.scene.CreateScreenImage("./assets/images/医疗.png", {horizontalAlignment: np3d.HorizontalAlignment.Center, verticalAlignment: np3d.VerticalAlignment.Center, offsetX: 100});
+                engine.scene.CreateScreenImage("./assets/images/emergency.gif", {horizontalAlignment: np3d.HorizontalAlignment.Center, verticalAlignment: np3d.VerticalAlignment.Top, offsetX: -100});
+                engine.scene.CreateScreenImage("./assets/images/医疗.png", {width: 200, height: 50});
+            }
+            else {
+                console.log("引擎未被正确创建");
+            }
+        });
+    </script>
+</body>
+</html>

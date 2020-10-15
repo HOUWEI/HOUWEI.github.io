@@ -1,0 +1,99 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <title>对象_html标签</title>
+    <style>
+            html, body, #cesiumContainer {
+                width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+            }
+    </style>
+    
+    <link href="np3d/np3d.css" rel="stylesheet" />
+    <script src="np3d/np3d.js"></script>
+</head>
+<body>
+    <div id = "3dContainer" ></div>
+    <script>
+        var engine = np3d.Create3dEngine(np3d.EngineType.Cesium, "3dContainer");
+        engine.statusCallback = (bCreated => {
+            if (bCreated) {
+                engine.scene.CreateImageryLayer(np3d.ProviderType.Arcgis);
+
+                const title = {
+                    text: "这是标题",
+                    styleId: "标题样式"               
+                };
+
+                const content1 = {
+                    text: "这是第一行内容",
+                    styleId: "内容样式",
+                    startTime: 0,
+                    rowNumber: 1   
+                };
+
+                const content21 = {
+                    text: "这是第二行内容,sfsd",
+                    styleId: "内容样式",
+                    startTime: 2,
+                    rowNumber: 2
+                };
+
+                const content22 = {
+                    text: "这是第士大夫内容",
+                    styleId: "内容样式",
+                    startTime: 0,
+                    rowNumber: 2
+                };
+
+                const content23 = {
+                    text: "这是第二行内呃呃呃呃呃容",
+                    styleId: "内容样式",
+                    startTime: 4,
+                    rowNumber: 2
+                };
+
+                const content3 = {
+                    text: "这是第三行内容",
+                    styleId: "内容样式",
+                    startTime: 0,
+                    rowNumber: 3   
+                };
+
+                const style1 = {
+                    id: "标题样式",
+                    fontName: "楷体",
+                    fontSize: 15,
+                    fontColor: {
+                        red: 1,
+                        green: 0,
+                        blue: 0,
+                        alpha: 1
+                    }
+                }
+
+                const style2 = {
+                    id: "内容样式",
+                    fontName: "楷体",
+                    fontSize: 12,
+                    fontColor: {
+                        red: 0,
+                        green: 0,
+                        blue: 0,
+                        alpha: 1
+                    }
+                }
+                               
+                var pos = engine.utiles.CreateVector3FromDegree(90, 60, 0);
+                var label = engine.scene.CreateAttributeLabel(pos, JSON.stringify(title), JSON.stringify([content1, content22, content21, content23, content3]), JSON.stringify([style1, style2]), {titleBackground: "assets/images/标题底图.png", contentBackground: "assets/images/内容底图.png", enableShortcutKeyDestory: true});
+                engine.navigator.FlytoSceneObject(label, 1);
+            }
+            else {
+                console.log("引擎未被正确创建");
+            }
+        });
+    </script>
+</body>
+</html>

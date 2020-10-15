@@ -1,0 +1,79 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>青岛环保</title>
+    <style>
+            html, body, #cesiumContainer {
+                width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+            }
+    </style>
+    <link href="np3d/np3d.css" rel="stylesheet" />
+    <script src="np3d/np3d.js"></script>
+</head>
+<body>
+    <div id = "3dContainer"></div>
+    <script>
+        var engine = np3d.Create3dEngine(np3d.EngineType.Cesium, "3dContainer");
+        engine.statusCallback = (bCreated => {
+            if (bCreated) {
+                engine.scene.CreateImageryLayer(np3d.ProviderType.Tiandi);
+
+                var modelLayer = engine.scene.CreateModelLayer("./assets/演示/青岛环保/tileset.json");
+                // modelLayer.hi
+                //var modelLayer1 = engine.scene.CreateModelLayer("./assets/演示/test/脱硫废水零排放车间-地上一层/tileset.json", {zRotate: 12});
+
+
+                var p1 = engine.utiles.CreateVector3(-2622493.141634596, 4329422.713329896, 3867615.2693168097);
+                var p2 = engine.utiles.CreateVector3(-2622541.8896649624, 4329396.133666852, 3867611.9900740883);
+                var p3 = engine.utiles.CreateVector3(-2622539.18059027, 4329384.914419104, 3867626.2894238927);
+                var p4 = engine.utiles.CreateVector3(-2622489.9392636255, 4329415.534274926, 3867625.408636492);
+
+                engine.scene.CreatePolygon([p1, p2, p3, p4], {name: "tt", clampToGround: false});
+
+
+                engine.scene.StartSelect(np3d.SelectMode.Polygon);
+                engine.scene.selectCompleteEvent.On((sender, selectset) => {
+                    console.log(selectset);      
+
+                    engine.scene.StartSelect(np3d.SelectMode.Polygon);
+                });
+
+                engine.scene.selectCancelEvent.On(() => {
+                    console.log("选择取消");              
+                });
+
+                // engine.scene.StartSelect(np3d.SelectMode.Point);
+                // const ids = [];
+                // engine.scene.selectCompleteEvent.On((sender, selectset) => {
+                //     engine.scene.StartSelect(np3d.SelectMode.Point);
+
+
+                //     console.log(selectset);      
+                // });
+
+                // modelLayer.modelsInfoLoadedCallback = () => {
+                //     modelLayer.SetModelsColor(modelLayer.ids, engine.utiles.CreateColor(1, 0, 0, 1));
+                //     modelLayer.flashModelIds = modelLayer.ids;
+                // };
+
+                engine.navigator.FlytoSceneObject(modelLayer, 4);
+
+                // engine.scene.StartSelect(np3d.SelectMode.Point);
+                // const ids = [];
+                // engine.scene.selectCompleteEvent.On((sender, selectset) => {
+                //     engine.scene.StartSelect(np3d.SelectMode.Point);
+
+
+                //     console.log(selectset);      
+                // });
+            }
+            else {
+                console.log("引擎未被正确创建");
+            }
+        });
+
+    </script>
+</body>
+</html>

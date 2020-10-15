@@ -1,0 +1,11 @@
+{
+    "processFlowPrecision" : "Mid",
+
+    "walkTipImageUrl": "assets/images/walkTip.png",
+
+    "walkModelUrl": "assets/models/walk.glb",
+
+    "heightDifference": 1,
+
+    "autoAdjustModelLayerDisplayEfficiency": true
+}

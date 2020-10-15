@@ -1,0 +1,64 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <title>分析_通视分析</title>
+    <style>
+            html, body, #cesiumContainer {
+                width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+            }
+    </style>
+    
+    <link href="np3d/np3d.css" rel="stylesheet" />
+    <script src="np3d/np3d.js"></script>
+</head>
+<body>
+    <div id = "3dContainer" ></div>
+    <script>
+        var engine = np3d.Create3dEngine(np3d.EngineType.Cesium, "3dContainer");
+        engine.statusCallback = (bCreated => {
+            if (bCreated) {
+                engine.scene.CreateImageryLayer(np3d.ProviderType.Arcgis);
+                //engine.scene.CreateTerrainLayer("http://27.17.7.86:60001/terrain/", {enableNormals: true, enableOcean: true});
+                var modelLayer = engine.scene.CreateModelLayer("./assets/演示/合肥市区/tileset.json");
+                engine.navigator.FlytoSceneObject(modelLayer, 4);
+                engine.scene.StartPickPoint();
+
+                let sourcePt;
+                let targetPt;
+
+                engine.scene.pickPointCompleteEvent.On((sender, pos) => {
+                    if (!sourcePt) {
+                        const degree = pos.ToLonLatAlt();
+                        sourcePt = engine.utiles.CreateVector3FromDegree(degree[0], degree[1], degree[2] + 1.8);
+                        engine.scene.StartPickPoint();
+
+                        return;
+                    } else {
+                        targetPt = pos;
+
+                        const blockPt = engine.analysis.AcquireTheFirstBlockViewPoint(sourcePt, targetPt);
+                        if (blockPt) {
+                            engine.scene.CreatePolyline([sourcePt, blockPt], {color: {red: 0, green: 1, blue: 0, alpha: 1}});
+                            engine.scene.CreatePolyline([blockPt, targetPt], {color: {red: 1, green: 0, blue: 0, alpha: 1}});
+                        } else {
+                            engine.scene.CreatePolyline([sourcePt, targetPt], {color: {red: 0, green: 1, blue: 0, alpha: 1}});
+                        }
+
+                        engine.scene.StartPickPoint();
+
+                        sourcePt = undefined;
+                        targetPt = undefined;
+
+                    }
+                });
+            }
+            else {
+                console.log("引擎未被正确创建");
+            }
+        });
+    </script>
+</body>
+</html>

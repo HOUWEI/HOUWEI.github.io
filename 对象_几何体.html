@@ -1,0 +1,51 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <title>对象_几何体</title>
+    <style>
+            html, body, #cesiumContainer {
+                width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+            }
+    </style>
+    
+    <link href="np3d/np3d.css" rel="stylesheet" />
+    <script src="np3d/np3d.js"></script>
+</head>
+<body>
+    <div id = "3dContainer" ></div>
+    <script>
+        var engine = np3d.Create3dEngine(np3d.EngineType.Cesium, "3dContainer");
+        engine.statusCallback = (bCreated => {
+            if (bCreated) {
+                engine.scene.CreateImageryLayer(np3d.ProviderType.Arcgis);
+
+                var pl11 = engine.utiles.CreateVector3FromDegree(117.5, 31.5, 0);
+                var pl12 = engine.utiles.CreateVector3FromDegree(117.6, 31.5, 0);
+                var pl13 = engine.utiles.CreateVector3FromDegree(117.6, 31.6, 0);
+                var pl14 = engine.utiles.CreateVector3FromDegree(117.5, 31.6, 0);
+                var polyline1 = engine.scene.CreatePolyline([pl11, pl12, pl13, pl14], {clampToGround: true});
+
+                var pp11 = engine.utiles.CreateVector3FromDegree(117.7, 31.5, 0);
+                var pp12 = engine.utiles.CreateVector3FromDegree(117.8, 31.5, 0);
+                var pp13 = engine.utiles.CreateVector3FromDegree(117.8, 31.6, 0);
+                var pp14 = engine.utiles.CreateVector3FromDegree(117.7, 31.6, 0);
+                var polygon1 = engine.scene.CreatePolygon([pp11, pp12, pp13, pp14], {clampToGround: true});
+
+                var pp21 = engine.utiles.CreateVector3FromDegree(117.7, 31.3, 100);
+                var pp22 = engine.utiles.CreateVector3FromDegree(117.8, 31.3, 100);
+                var pp23 = engine.utiles.CreateVector3FromDegree(117.8, 31.4, 100);
+                var pp24 = engine.utiles.CreateVector3FromDegree(117.7, 31.4, 100);
+                var polygon2 = engine.scene.CreatePolygon([pp21, pp22, pp23, pp24], {clampToGround: false});
+
+                engine.navigator.FlytoSceneObject([polyline1, polygon1, polygon2], 4);
+            }
+            else {
+                console.log("引擎未被正确创建");
+            }
+        });
+    </script>
+</body>
+</html>

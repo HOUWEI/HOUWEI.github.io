@@ -1,0 +1,81 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <title>对象_可移动实体</title>
+    <style>
+            html, body, #cesiumContainer {
+                width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+            }
+    </style>
+    
+    <link href="np3d/np3d.css" rel="stylesheet" />
+    <script src="np3d/np3d.js"></script>
+</head>
+<body>
+    <div id = "3dContainer" ></div>
+    <div style='position:fixed; z-index:999; top:0; padding: 10'>
+        <input type="button" value="播放" onclick="play()" />
+        <input type="button" value="停止" onclick="stop()" />
+        <input type="button" value="暂停" onclick="pause()" />
+        播放速率： <input type="text" value="1" onchange="ratioChanged(this.value)">
+        当前时刻： <input type="text" value="" onchange="timeChanged(this.value)">
+        循环播放： <input type="checkbox" id="loop" onclick="loop()" />
+        路径线：   <input type="checkbox" id="showpath" onclick="showpath()" />
+    </div>
+    <script>
+        var engine = np3d.Create3dEngine(np3d.EngineType.Cesium, "3dContainer");
+        var animation;
+        engine.statusCallback = (bCreated => {
+            if (bCreated) {
+                engine.scene.CreateImageryLayer(np3d.ProviderType.Arcgis);
+                engine.scene.CreateTerrainLayer("http://27.17.7.86:60001/terrain/", {enableNormals: true, enableOcean: true});
+
+
+                var p1 = engine.utiles.CreateRoutePoint(0, engine.utiles.CreateVector3FromDegree(102, 25, 1), 0, 0, 0);
+                var p2 = engine.utiles.CreateRoutePoint(10, engine.utiles.CreateVector3FromDegree(102, 25.01, 1), 0, 0, 0);
+                var p3 = engine.utiles.CreateRoutePoint(18, engine.utiles.CreateVector3FromDegree(102.01, 25.01, 1), 0, 0, 0);
+
+                animation = engine.scene.CreateMoveableEntity([p1, p2, p3], "./assets/models/GroundVehicle.glb", {cameraTracked: true, clampToGround: true});
+
+                animation.statusCallback = (obj) => {
+                    console.log(obj.time);
+                };
+            }
+            else {
+                console.log("引擎未被正确创建");
+            }
+        });
+
+        function play() {
+            animation.Start();
+        }
+
+        function stop() {
+            animation.Stop();
+        }
+
+        function pause() {
+            animation.Pause();
+        }
+
+        function ratioChanged(value) {
+            animation.ratio = Number(value);
+        }
+
+        function timeChanged(value) {
+            animation.time = Number(value);
+        }
+
+        function loop() {
+            animation.loop = document.getElementById('loop').checked;
+        }
+
+        function showpath() {
+            animation.showPath = document.getElementById('showpath').checked;
+        }
+    </script>
+</body>
+</html>

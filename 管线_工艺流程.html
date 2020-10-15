@@ -1,0 +1,107 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>管线_工艺流程</title>
+    <style>
+            html, body, #cesiumContainer {
+                width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+            }
+    </style>
+
+    <link href="np3d/np3d.css" rel="stylesheet" />
+    <script src="np3d/np3d.js"></script>
+</head>
+<body>
+    <div id = "3dContainer"></div>
+    <div style='position:fixed; z-index:999; top:0; padding: 10'>
+        <input type="button" value="播放" onclick="play()" />
+        <input type="button" value="停止" onclick="stop()" />
+        <input type="button" value="暂停" onclick="pause()" />
+        播放速率： <input type="text" value="1" onchange="ratioChanged(this.value)">
+        当前时刻： <input type="text" value="" onchange="timeChanged(this.value)">
+        循环播放： <input type="checkbox" id="loop" onclick="loop()" />
+    </div>
+    <script>
+        var engine = np3d.Create3dEngine(np3d.EngineType.Cesium, "3dContainer");
+        var animation;
+        engine.statusCallback = (bCreated => {
+            if (bCreated) {
+                engine.scene.CreateImageryLayer(np3d.ProviderType.Arcgis);
+
+                const script = `{
+                    "0":{
+                         "id":"0",
+                         "startPosition":{"x":114,"y":31,"z":10},
+                         "endPosition":{"x":114,"y":31.0005,"z":10},
+                         "radius":1,
+                         "speed":5,
+                         "color":{
+                             "red":1,
+                             "green":0,
+                             "blue":0,
+                             "alpha":1
+                            },
+                         "nextSegmentIds":["1","2"],
+                         "startPositionCartesian":{"x":-2225662.801541607,"y":4998920.498573128,"z":3265898.667034692},
+                         "endPositionCartesian":{"x":-2225651.1887015775,"y":4998894.415707374,"z":3265946.183826461}
+                        },
+                    "1":{
+                         "id":"1",
+                         "startPosition":{"x":114,"y":31.0005,"z":10},
+                         "endPosition":{"x":114.001,"y":31.0005,"z":10},
+                         "radius":1,
+                         "speed":15,
+                         "color":{"red":1,"green":1,"blue":0,"alpha":1},
+                         "nextSegmentIds":[],
+                         "startPositionCartesian":{"x":-2225651.1887015775,"y":4998894.415707374,"z":3265946.183826461},
+                         "endPositionCartesian":{"x":-2225738.4355291007,"y":4998855.5700047575,"z":3265946.183826462}
+                        },
+                    "2":{
+                         "id":"2",
+                         "startPosition":{"x":114,"y":31.0005,"z":10},
+                         "endPosition":{"x":114,"y":31.0005,"z":100},
+                         "radius":1,
+                         "speed":2,
+                         "color":{"red":0,"green":1,"blue":0,"alpha":1},
+                         "nextSegmentIds":[],
+                         "startPositionCartesian":{"x":-2225651.1887015775,"y":4998894.415707374,"z":3265946.183826461},
+                         "endPositionCartesian":{"x":-2225682.5662585874,"y":4998964.890854293,"z":3265992.5379264187}
+                        }
+                    }`;
+
+                animation = engine.scene.CreateProcessFlow(script, {isOuter: false, playNow: false});
+                engine.navigator.FlytoSceneObject(animation, 4);
+            }
+            else {
+                console.log("引擎未被正确创建");
+            }
+        });
+
+        function play() {
+            animation.Start();
+        }
+
+        function stop() {
+            animation.Stop();
+        }
+
+        function pause() {
+            animation.Pause();
+        }
+
+        function ratioChanged(value) {
+            animation.ratio = Number(value);
+        }
+
+        function timeChanged(value) {
+            animation.time = Number(value);
+        }
+
+        function loop() {
+            animation.loop = document.getElementById('loop').checked;
+        }
+    </script>
+</body>
+</html>

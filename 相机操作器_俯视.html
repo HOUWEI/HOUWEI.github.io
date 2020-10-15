@@ -1,0 +1,42 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <title>相机操作器_环视</title>
+    <style>
+            html, body, #cesiumContainer {
+                width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+            }
+    </style>
+    
+    <link href="np3d/np3d.css" rel="stylesheet" />
+    <script src="np3d/np3d.js"></script>
+</head>
+<body>
+    <div id = "3dContainer" ></div>
+    <script>
+        var engine = np3d.Create3dEngine(np3d.EngineType.Cesium, "3dContainer");
+        engine.statusCallback = (bCreated => {
+            if (bCreated) {
+                engine.scene.CreateImageryLayer(np3d.ProviderType.Arcgis);
+                var modelLayer = engine.scene.CreateModelLayer("./assets/演示/合肥市区/tileset.json");
+                engine.navigator.FlytoSceneObject(modelLayer, 4);
+
+                window.setTimeout(() => {
+                    const width = engine.canvas.width;
+                    const height = engine.canvas.height;
+                    const pos = engine.canvas.ScreenToWorld(width / 2.0, height / 2.0, np3d.PickMode.Default);
+                    const degreePos = pos.ToLonLatAlt();
+                    const currentPos = engine.navigator.position.ToLonLatAlt();
+                    engine.navigator.FlytoByPosture(engine.utiles.CreateVector3FromDegree(degreePos[0], degreePos[1], currentPos[2]),0, -90);
+                }, 10000);
+            }
+            else {
+                console.log("引擎未被正确创建");
+            }
+        });
+    </script>
+</body>
+</html>

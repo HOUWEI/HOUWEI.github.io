@@ -1,0 +1,91 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <title>可视化_航线图</title>
+    <style>
+            html, body, #cesiumContainer {
+                width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+            }
+    </style>
+    
+    <link href="np3d/np3d.css" rel="stylesheet" />
+    <script src = "echarts/echarts.min.js"></script>
+    <script src = "echarts/echarts-gl.min.js"></script>
+
+    <script src="np3d/np3d.js"></script>
+</head>
+<body>
+    <div id = "3dContainer" ></div>
+    <script>
+        var engine = np3d.Create3dEngine(np3d.EngineType.Cesium, "3dContainer");
+        engine.statusCallback = (bCreated => {
+            if (bCreated) {
+                engine.scene.CreateImageryLayer(np3d.ProviderType.Arcgis);
+
+                $.getJSON("./echarts/data/population.json", function(data) {
+
+                    data = data.filter(function (dataItem) {
+                        return dataItem[2] > 0;
+                    }).map(function (dataItem) {
+                        return [dataItem[0], dataItem[1], Math.sqrt(dataItem[2])];
+                    });
+
+                    var echartsData = {
+                                        globe: {
+                                            show: false,
+                                            shading: 'lambert',
+                                            light: {
+                                                main: {
+                                                    intensity: 2
+                                                }
+                                            },
+                                            viewControl: {
+                                                autoRotate: false
+                                            }
+                                        },
+                                        visualMap: {
+                                            max: 40,
+                                            calculable: true,
+                                            realtime: false,
+                                            inRange: {
+                                                colorLightness: [0.2, 0.9]
+                                            },
+                                            textStyle: {
+                                                color: '#fff'
+                                            },
+                                            controller: {
+                                                inRange: {
+                                                    color: 'orange'
+                                                }
+                                            },
+                                            outOfRange: {
+                                                colorAlpha: 0
+                                            }
+                                        },
+                                        series: [{
+                                            type: 'bar3D',
+                                            coordinateSystem: 'globe',
+                                            data: data,
+                                            barSize: 0.6,
+                                            minHeight: 0.2,
+                                            silent: true,
+                                            itemStyle: {
+                                                color: 'orange'
+                                            }
+                                        }]
+                                    };
+
+                    engine.scene.CreateEchartsFlow(echartsData);
+                });
+
+            }
+            else {
+                console.log("引擎未被正确创建");
+            }
+        });
+    </script>
+</body>
+</html>

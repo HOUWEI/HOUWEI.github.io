@@ -1,0 +1,118 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>动画_工艺流程</title>
+    <style>
+            html, body, #cesiumContainer {
+                width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+            }
+    </style>
+    <link href="np3d/np3d.css" rel="stylesheet" />
+    <script src="np3d/np3d.js"></script>
+</head>
+<body>
+    <div id = "3dContainer">
+        <!-- <button type="button" onclick="layer.xRotate -= 0.01; console.log('x:' + layer.xRotate);">x偏移--</button>
+        <button type="button" onclick="layer.xRotate += 0.01; console.log('x:' + layer.xRotate);">x偏移++</button>
+        <button type="button" onclick="layer.yRotate -= 0.01; console.log('y:' + layer.yRotate);">y偏移--</button>
+        <button type="button" onclick="layer.yRotate += 0.01; console.log('y:' + layer.yRotate);">y偏移++</button>
+        <button type="button" onclick="layer.zRotate -= 0.01; console.log('z:' + layer.zRotate);">z偏移--</button>
+        <button type="button" onclick="layer.zRotate += 0.01; console.log('z:' + layer.zRotate);">z偏移++</button> -->
+    </div>
+
+    <div style='position:fixed; z-index:999; top:0; padding: 10'>
+        <input type="button" value="播放" onclick="play()" />
+        <input type="button" value="停止" onclick="stop()" />
+        <input type="button" value="暂停" onclick="pause()" />
+    </div>
+
+    <script>
+        var engine = np3d.Create3dEngine(np3d.EngineType.Cesium, "3dContainer");
+        var layer1, layer2;
+        var animation;
+
+        engine.statusCallback = (bCreated => {
+            if (bCreated) {
+                engine.scene.CreateImageryLayer(np3d.ProviderType.Arcgis);
+
+                engine.debug.showFramesPerSecond = true;
+                engine.debug.enable3dTilesInspector = true;
+                engine.canvas.enableNavigationWidget = false;
+
+                // engine.scene.CreateModelLayer("./assets/演示/青岛/脱硫废水零排放车间-地上一层/tileset.json", {name: "脱硫废水零排放车间-地上一层", zRotate: 1.06});
+                // engine.scene.CreateModelLayer("./assets/演示/青岛/脱硫废水零排放车间-地上一层-设备/tileset.json", {name: "脱硫废水零排放车间-地上一层-设备", zRotate: 1.06});
+                // engine.scene.CreateModelLayer("./assets/演示/青岛/脱硫废水零排放车间-地上二层/tileset.json", {name: "脱硫废水零排放车间-地上二层", zRotate: 1.06});
+                // engine.scene.CreateModelLayer("./assets/演示/青岛/脱硫废水零排放车间-地上二层-设备/tileset.json", {name: "脱硫废水零排放车间-地上二层-设备", zRotate: 1.06});
+                // engine.scene.CreateModelLayer("./assets/演示/青岛/脱硫废水零排放车间-地上三层/tileset.json", {name: "脱硫废水零排放车间-地上三层", zRotate: 1.06});
+                // engine.scene.CreateModelLayer("./assets/演示/青岛/脱硫废水零排放车间-地上三层-设备/tileset.json", {name: "脱硫废水零排放车间-地上三层-设备", zRotate: 1.06});
+                layer1 = engine.scene.CreateModelLayer("http://27.17.7.86:60001/3dtiles/shanghai/tileset.json");
+                layer2 = engine.scene.CreateImageryLayer(np3d.ProviderType.Arcgis);  
+
+                engine.navigator.FlytoSceneObject(layer1);
+
+                let objs = engine.scene.GetAllSceneObjects();
+
+                objs.forEach(element => {
+                    if (element.typeName === "modellayer") {
+                        console.log(element);
+                    }
+                });
+
+                console.log(objs);
+
+
+                // $.get("assets/演示/test1/20191101合并.json").done((data) => {
+                //     let obj = engine.scene.CreateSceneObjects(JSON.stringify(data));
+
+                //     engine.navigator.FlytoSceneObject(obj[0], 0.1);
+                // });
+
+
+
+
+
+                // engine.scene.StartSelect(np3d.SelectMode.Point);
+
+                
+                // engine.scene.selectCompleteEvent.On((sender, selectset) => {
+                //     engine.scene.StartSelect(np3d.SelectMode.Point);
+
+                //     const modellayer = engine.scene.GetSceneObjectById(selectset[0].id);
+                //     const ids = modellayer.hideModelIds;
+                //     ids.push(selectset[0].subId);
+                //     modellayer.hideModelIds = ids;
+
+
+                //     console.log(selectset[0].id + " " + selectset[0].subId);      
+                // });
+
+                // $.get("assets/scripts/01预处理系统工艺流程.json").done((data) => {
+                //     animation = engine.scene.CreateAnimation(JSON.stringify(data), "assets/scripts//resource/");
+                // })
+
+                // $.get("assets/scripts/guanxian.json").done((data) => {
+                //     engine.scene.CreateSceneObjects(JSON.stringify(data));
+                // })                   
+            }
+            else {
+                console.log("引擎未被正确创建");
+            }
+        });
+
+        function play() {
+            animation.Start();
+        }
+
+        function stop() {
+            animation.Stop();
+        }
+
+        function pause() {
+            animation.Pause();
+        }
+
+    </script>
+</body>
+</html>

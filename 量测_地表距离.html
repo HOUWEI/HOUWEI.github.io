@@ -1,0 +1,41 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <title>量测_地表距离</title>
+    <style>
+            html, body, #cesiumContainer {
+                width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+            }
+    </style>
+    
+    <link href="np3d/np3d.css" rel="stylesheet" />
+    <script src="np3d/np3d.js"></script>
+</head>
+<body>
+    <div id = "3dContainer" ></div>
+    <script>
+        var engine = np3d.Create3dEngine(np3d.EngineType.Cesium, "3dContainer");
+        engine.statusCallback = (bCreated => {
+            if (bCreated) {
+                engine.scene.CreateImageryLayer(np3d.ProviderType.Arcgis);
+                //engine.scene.CreateTerrainLayer("http://27.17.7.86:60001/terrain/", {enableNormals: true, enableOcean: true});
+
+                engine.measure.Start(np3d.MeasureType.GroundDistance);
+                engine.measure.completeEvent.On(() => {
+                    console.log("量测已完成");
+                    engine.measure.Start(np3d.MeasureType.GroundDistance);
+                });
+                engine.measure.cancelEvent.On(() => {
+                    console.log("量测已取消");
+                });
+            }
+            else {
+                console.log("引擎未被正确创建");
+            }
+        });
+    </script>
+</body>
+</html>

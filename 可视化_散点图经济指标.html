@@ -1,0 +1,142 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <title>可视化_散点图经济指标</title>
+    <style>
+            html, body, #cesiumContainer {
+                width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+            }
+    </style>
+    
+    <link href="np3d/np3d.css" rel="stylesheet" />
+    <script src = "echarts/echarts.min.js"></script>
+    <script src = "echarts/echarts-gl.min.js"></script>
+
+    <script src="np3d/np3d.js"></script>
+</head>
+<body>
+    <div id = "3dContainer" ></div>
+    <script>
+        var engine = np3d.Create3dEngine(np3d.EngineType.Cesium, "3dContainer");
+        engine.statusCallback = (bCreated => {
+            if (bCreated) {
+                engine.scene.CreateImageryLayer(np3d.ProviderType.Arcgis);
+
+                var data = [
+                     { name: '六安市', value: 112, location: [116.3123, 31.8329] },
+                     { name: '安庆市', value: 424, location: [116.7517, 30.5255] },
+                     { name: '滁州市', value: 76, location: [118.1909, 32.536] },
+                     { name: '宣城市', value: 45, location: [118.8062, 30.6244] },
+                     { name: '阜阳市', value: 234, location: [115.7629, 32.9919] },
+                     { name: '宿州市', value: 110, location: [117.5208, 33.6841] },
+                     { name: '黄山市', value: 98, location: [118.0481, 29.9542] },
+                     { name: '巢湖市', value: 71, location: [117.7734, 31.4978] },
+                     { name: '亳州市', value: 165, location: [116.1914, 33.4698] },
+                     { name: '池州市', value: 12, location: [117.3889, 30.2014] },
+                     { name: '合肥市', value: 232, location: [117.29, 32.0581] },
+                     { name: '蚌埠市', value: 123, location: [117.4109, 33.1073] },
+                     { name: '芜湖市', value: 73, location: [118.3557, 31.0858] },
+                     { name: '淮北市', value: 16, location: [116.6968, 33.6896] },
+                     { name: '淮南市', value: 75, location: [116.7847, 32.7722] },
+                     { name: '马鞍山市', value: 45, location: [118.6304, 31.5363] },
+                     { name: '铜陵市', value: 93, location: [117.9382, 30.9375] }
+                ];
+                var brcolor = "#ff00ff";
+                var echartsdata = (data, optcolor) => {
+
+                    //纬度做偏移处理,避免重叠
+                    if (data.length > 1) {
+                        data.sort(function (a, b) {
+                            return b.location[1] - a.location[1];
+                        });
+                        for (var i = 1; i < data.length; i++) {
+                            var thisItem = data[i].location;
+
+                            var ispy = false;
+                            for (var j = 0; j < i; j++) {
+                                var lastItem = data[j].location;
+                                var offX = Math.abs(lastItem[0] - thisItem[0]);
+                                var offY = Math.abs(lastItem[1] - thisItem[1]);
+                                if (offX < 0.025 && offY < 0.005) {
+                                    ispy = true;
+                                    break;
+                                }
+                            }
+
+                            if (ispy) {
+                                thisItem[1] -= 0.006; //偏移纬度
+                            }
+                        }
+                    }
+
+
+                    var sum = 0;
+                    var dataVals = []; 
+                    for (var i = 0; i < data.length; i++) {
+                        sum += data[i].value;
+
+                        dataVals.push({
+                            name: data[i].name,
+                            value: data[i].location.concat(data[i].value)
+                        }); 
+                    } 
+
+
+                    var option = {
+                        animation: false,
+                        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+
+                        GLMap: {
+
+                        },
+                        tooltip: {
+                            trigger: 'item'
+                        },
+                        series: [{
+                            type: 'effectScatter',
+                            coordinateSystem: 'GLMap',
+                            data: dataVals,
+                            symbolSize: function (val) {
+                                if (sum == 0) return 8;
+
+                                var num = (val[2] / sum) * 150;
+                                return Math.max(num, 8);
+                            },
+                            showEffectOn: 'render',
+                            rippleEffect: {
+                                brushType: 'stroke'
+                            },
+                            hoverAnimation: true,
+                            label: {
+                                normal: {
+                                    formatter: '{b}',
+                                    position: 'right',
+                                    show: true
+                                }
+                            },
+                            itemStyle: {
+                                normal: {
+                                    color: optcolor,
+                                    shadowBlur: 60,
+                                    shadowColor: '#cccccc'
+                                }
+                            },
+                            zlevel: 1
+                        }]
+                    };
+                        return option;
+                    }
+
+                engine.scene.CreateEchartsFlow(echartsdata(data, brcolor));
+
+            }
+            else {
+                console.log("引擎未被正确创建");
+            }
+        });
+    </script>
+</body>
+</html>
