@@ -9,14 +9,14 @@
     <script src='aframe-ar-nft.js'></script>
 </head>
 
-<!-- <script>
+<script>
   AFRAME.registerComponent('clickhandler', {
       init: function() {
           this.el.addEventListener('click', () => {
               alert('Clicked!')
           });
   }});
-</script> -->
+</script>
 
 <body style='margin: 0; overflow: hidden;'>
   <a-scene
@@ -26,9 +26,9 @@
   embedded
   arjs='sourceType: webcam; debugUIEnabled: false;'>
 
-  <a-gltf-model src="CesiumMan.glb" animation-mixer gps-entity-place="latitude: 44.504349; longitude: 11.302027;"></a-gltf-model>
+  <a-gltf-model clickhandler src="CesiumMan.glb" gps-entity-place="latitude: 44.504349; longitude: 11.301027;"></a-gltf-model>
 
-  <a-image src="place.png" gps-entity-place="latitude: 44.504349; longitude: 11.301027;"></a-image>
+  <!-- <a-image src="place.png" gps-entity-place="latitude: 44.504349; longitude: 11.301027;"></a-image> -->
   <!-- <a-image src="place.png" gps-entity-place="latitude: 44.504349; longitude: 11.301127;"></a-image>
   <a-image src="place.png" gps-entity-place="latitude: 44.504449; longitude: 11.301027;"></a-image>
   <a-image src="place.png" gps-entity-place="latitude: 44.504449; longitude: 11.301127;"></a-image> -->
