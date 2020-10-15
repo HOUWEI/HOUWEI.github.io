@@ -23,8 +23,9 @@
         ></a-image> -->
 
         <!-- ~ 0m far -->
-        <a-image src="place.png" gps-entity-place="latitude: 44.504348; longitude: 11.301027;"
-            ></a-image>
+        <a-image src="place.png" gps-entity-place="latitude: 44.504348; longitude: 11.301027;"></a-image>
+
+        <a-gltf-model src="CesiumMan.glb" gps-entity-place="latitude: 44.504348; longitude: 11.301027;"></a-gltf-model>
 
         <!-- using gpsMinDistance: 5 => update GPS only if user moves by 5 meters or more => avoid shaking for near objects -->
         <!-- using accelerationToMove: 1.0 => 'smooth' inertial sensors precision precision in order to avoid distant places shaking -->
